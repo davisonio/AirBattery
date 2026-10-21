@@ -957,14 +957,15 @@ struct nearcastView: View {
                     }
                     .padding(.vertical, 6)
                     .padding(.horizontal, 10)
-                    .onHover{ hovering in overStack = index }
+                    // Clear the highlight when the cursor leaves (upstream #159).
+                    .onHover{ hovering in overStack = hovering ? index : -1 }
                 }
                 .background((overStackNC == mainIndex && overStack == index) ? Color.blackWhite.opacity(0.15) : .clear)
                 .clipShape(RoundedCornersShape(radius: 2.9, corners: index == devices.count - 1 ? [.bottomLeft, .bottomRight] : (index == 0 ? [.topLeft, .topRight] : [])))
                 if index != devices.count-1 { Divider() }
             }
         }
-        .onHover{ hovering in overStackNC = mainIndex }
+        .onHover{ hovering in overStackNC = hovering ? mainIndex : -1 }
         .padding(.horizontal, 6)
         .overlay(
             RoundedRectangle(cornerRadius: 4)
