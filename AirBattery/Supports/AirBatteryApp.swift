@@ -9,12 +9,10 @@ import SwiftUI
 import WidgetKit
 import UserNotifications
 import IOBluetooth
-import Sparkle
 import ServiceManagement
 
 let fd = FileManager.default
 let ud = UserDefaults.standard
-var updaterController: SPUStandardUpdaterController!
 var statusBarItem: NSStatusItem!
 var pinnedItems = [NSStatusItem]()
 /// Icon name currently shown by each pinned item, keyed by device name.
@@ -37,9 +35,6 @@ struct AirBatteryApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init() {
-        // If you want to start the updater manually, pass false to startingUpdater and call .startUpdater() later
-        // This is where you can also pass an updater delegate if you need one
-        updaterController = SPUStandardUpdaterController(startingUpdater: updatesEnabled, updaterDelegate: nil, userDriverDelegate: nil)
         registerNotificationCategory()
     }
     

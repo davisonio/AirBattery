@@ -11,14 +11,14 @@
 import Foundation
 
 enum AppIdentifiers {
-    static let prefix = "io.github.msieurpafi"
+    static let prefix = "io.davison"
 
     static let app = "\(prefix).AirBattery"
     static let widget = "\(prefix).AirBattery.widget"
     static let helper = "\(prefix).AirBatteryHelper"
 
     // Also declared in AirBattery/Info.plist (CFBundleURLSchemes).
-    static let urlScheme = "airbattery-plus"
+    static let urlScheme = "airbattery"
 
     static func url(_ host: String) -> URL? {
         URL(string: "\(urlScheme)://\(host)")

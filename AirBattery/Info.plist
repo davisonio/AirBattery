@@ -9,7 +9,7 @@
 			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>airbattery-plus</string>
+				<string>airbattery</string>
 			</array>
 		</dict>
 	</array>
@@ -21,7 +21,5 @@
 	<false/>
 	<key>OSAScriptingDefinition</key>
 	<string>Scriptable</string>
-	<key>SUEnableAutomaticChecks</key>
-	<false/>
 </dict>
 </plist>
