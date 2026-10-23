@@ -91,6 +91,11 @@ class MultipeerService: ObservableObject {
                     }
                 case "":
                     print("Data received.")
+                    // sender is not encrypted and becomes a file name: accept only an ID, never a path.
+                    guard message.sender.range(of: "^[A-Za-z0-9-]{1,64}$", options: .regularExpression) != nil else {
+                        print("Rejected Nearcast data with invalid sender.")
+                        break
+                    }
                     if let jsonString = decryptString(message.content, password: self.ncGroupID) {
                         if let jsonData = jsonString.data(using: .utf8) {
                             let url = ncFolder.appendingPathComponent("\(message.sender).json")

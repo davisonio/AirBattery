@@ -9,7 +9,8 @@ import Foundation
 
 class CommandLineTool {
     static func runAsRoot(_ command: String, completion: (() -> Void)? = nil) {
-        let script = "do shell script \"\(command)\" with administrator privileges"
+        let escaped = command.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\"")
+        let script = "do shell script \"\(escaped)\" with administrator privileges"
         var error: NSDictionary?
         
         if let scriptObject = NSAppleScript(source: script) {
@@ -23,6 +24,10 @@ class CommandLineTool {
         }
     }
     
+    static func shellQuote(_ s: String) -> String {
+        return "'" + s.replacingOccurrences(of: "'", with: "'\\''") + "'"
+    }
+    
     static func isInstalled() -> Bool {
         let attributes = try? fd.attributesOfItem(atPath: "/usr/local/bin/airbattery")
         return attributes?[.type] as? FileAttributeType == .typeSymbolicLink
@@ -32,11 +37,11 @@ class CommandLineTool {
         if let resourceURL = Bundle.main.resourceURL {
             let binPath = resourceURL.appendingPathComponent("abt").path
             if !fd.fileExists(atPath: "/usr/local/bin") {
-                runAsRoot("/bin/mkdir -p /usr/local/bin;/bin/ln -s '\(binPath)' /usr/local/bin/airbattery") {
+                runAsRoot("/bin/mkdir -p /usr/local/bin;/bin/ln -s \(shellQuote(binPath)) /usr/local/bin/airbattery") {
                     action?()
                 }
             } else {
-                runAsRoot("/bin/ln -s '\(binPath)' /usr/local/bin/airbattery") {
+                runAsRoot("/bin/ln -s \(shellQuote(binPath)) /usr/local/bin/airbattery") {
                     action?()
                 }
             }
