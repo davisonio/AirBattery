@@ -57,6 +57,7 @@ Personal fork of [lihaoyun6/AirBattery](https://github.com/lihaoyun6/AirBattery)
 | `28db6fb` | Icons for AirPods 4 ANC, AirPods Max 2 and MacBook Neo | #166, #195, #204, #205 | MsieurPafi, from callieskye |
 | `7cb052b` | Nearcast row highlight cleared when the cursor leaves | #159 | MsieurPafi, from callieskye |
 | `8990d10` | Pinned menu bar icons stay current and keep their position across launches | #182 | MsieurPafi, from callieskye |
+| `8e02c56` | Settings window comes to the front when you click the gear (it opened behind other apps on macOS 14+); grammar of the Bluetooth tip | #175 | this fork |
 
 ### Security fixes (from this fork's audit, `430d19e`)
 
