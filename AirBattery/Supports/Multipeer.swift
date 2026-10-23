@@ -59,7 +59,7 @@ class MultipeerService: ObservableObject {
                                     createNotification(title: "Device Connected".local,
                                                        message: String(format: "%@ from %@".local, device.name, peer.name))
                                 } else {
-                                    if let message = self.createInfo(type: 254, title: "Connection Failed".local, info: String(format: "cannot connect to your device!".local, device.name), atta: device.mac) {
+                                    if let message = self.createInfo(type: 254, title: "Connection Failed".local, info: String(format: "Can't connect to your device.".local, device.name), atta: device.mac) {
                                         self.sendMessage(message, peerID: peer.id)
                                     }
                                 }

@@ -88,7 +88,7 @@ struct GeneralView: View {
                         NSApp.setActivationPolicy(.accessory)
                     }
                     if newValue == "dock" || newValue == "both" {
-                        _ = createAlert(title: "AirBattery Tips".local, message: "Displaying AirBattery on the Dock will consume more power, it is better to use Menu Bar mode or Widgets.".local, button1: "OK").runModal()
+                        _ = createAlert(title: "AirBattery Tips".local, message: "Showing AirBattery in the Dock uses more power. Menu Bar mode or widgets are better.".local, button1: "OK").runModal()
                     }
                 }
             }
@@ -140,7 +140,7 @@ struct NearbilityView: View {
     var body: some View {
         SForm {
             SGroupBox(label: "Scanner") {
-                SToggle("Discover iOS devices via Network", isOn: $readIDevice, tips: "Scan your iPhone / iPad / Apple Watch / VisionPro and other iDevices in your local network.")
+                SToggle("Discover iOS devices via Network", isOn: $readIDevice, tips: "Scan your iPhone / iPad / Apple Watch / Vision Pro and other iDevices in your local network.")
                 Divider().opacity(0.5)
                 SToggle("Discover iOS devices via Bluetooth", isOn: $ideviceOverBLE, tips: "Scan only the iPhone and iPad that you explicitly authorize via Bluetooth.")
                     .onChange(of: ideviceOverBLE) { newValue in
@@ -167,7 +167,7 @@ struct NearbilityView: View {
                     .foregroundColor(.orange)
                     .onChange(of: readBLEDevice) { newValue in
                         if newValue {
-                            _ = createAlert(title: "AirBattery Tips".local, message: "If you see a bluetooth pairing request from any device that isn't yours, add it to your blocklist!".local, button1: "OK").runModal()
+                            _ = createAlert(title: "AirBattery Tips".local, message: "If you see a Bluetooth pairing request from any device that isn't yours, add it to your blocklist!".local, button1: "OK").runModal()
                         }
                     }
                 Divider().opacity(0.5)
@@ -367,7 +367,7 @@ struct NearcastView: View {
                         .font(.footnote)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
-                    Text("Your data has been encrypted using the group id, don't share it with others.")
+                    Text("Your data is encrypted with the Group ID. Don't share it with others.")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -419,11 +419,11 @@ struct DisplayView: View {
                     Text("Outside").tag("outside")
                 }.disabled(!intBattOnStatusBar)
                 Divider().opacity(0.5)
-                SPicker("Remove Offline Device", selection: $disappearTime) {
+                SPicker("Remove Offline Devices", selection: $disappearTime) {
                     Text("Never").tag(UInt32.max)
-                    Text("after 20min").tag(20)
-                    Text("after 40min").tag(40)
-                    Text("after 60min").tag(60)
+                    Text("after 20 min").tag(20)
+                    Text("after 40 min").tag(40)
+                    Text("after 60 min").tag(60)
                 }
                 Divider().opacity(0.5)
                 SPicker("Hide percentage when above", selection: $hideLevel) {
@@ -523,7 +523,7 @@ struct BlacklistView: View {
                     Divider().opacity(0.5)
                     HStack {
                         Spacer()
-                        Text(whitelistMode ? "Only the following devices will be showed" : "The following devices will be ignored")
+                        Text(whitelistMode ? "Only the following devices will be shown" : "The following devices will be ignored")
                             .foregroundColor(.secondary)
                         Spacer()
                     }

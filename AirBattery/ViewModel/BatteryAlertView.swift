@@ -62,7 +62,7 @@ struct AlertInputView: View {
                     .font(.system(size: 18, weight: .semibold, design: .rounded))
                 VStack {
                     HStack(spacing: 4) {
-                        Toggle("Notify me when battery charged above:", isOn: $fullOn)
+                        Toggle("Notify me when battery charges above:", isOn: $fullOn)
                             .toggleStyle(.checkbox)
                             .foregroundColor(fullOn ? .primary : .secondary)
                         Spacer()

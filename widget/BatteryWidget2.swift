@@ -402,7 +402,7 @@ struct batteryWidget2: Widget {
                 .widgetBackground(Color("WidgetBackground"))
         }
         .configurationDisplayName("Batteries")
-        .description("More ways to displays battery usage for your devices")
+        .description("More ways to display battery usage for your devices")
         .disableContentMarginsIfNeeded()
         .supportFamily()
     }

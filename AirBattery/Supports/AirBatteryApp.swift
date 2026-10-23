@@ -291,7 +291,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotifi
             let tipID = "ab.docktile-power.note"
             let never = ud.object(forKey: "neverRemindMe") as! [String]
             if !never.contains(tipID) {
-                let alert = createAlert(title: "AirBattery Tips".local, message: "Displaying AirBattery on the Dock will consume more power, it is better to use Menu Bar mode or Widgets.".local, button1: "Don't remind me again", button2: "OK")
+                let alert = createAlert(title: "AirBattery Tips".local, message: "Showing AirBattery in the Dock uses more power. Menu Bar mode or widgets are better.".local, button1: "Don't remind me again", button2: "OK")
                 if alert.runModal() == .alertFirstButtonReturn { ud.setValue(never + [tipID], forKey: "neverRemindMe") }
             }
         }
