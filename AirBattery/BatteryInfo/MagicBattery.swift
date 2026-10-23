@@ -399,10 +399,13 @@ class MagicBattery {
         let now = Date().timeIntervalSince1970
         for source in sources {
             guard let info = IOPSGetPowerSourceDescription(blob, source)?.takeUnretainedValue() as? [String: Any] else { continue }
-            // AirPods publish one power source per part (case, left, right). Those rows belong to
-            // the AirPods paths, which name them "… (Case)" / "… 🄻" / "… 🅁"; re-adding them under
-            // the bare accessory name would duplicate every pod instead of updating it.
-            guard info["Part Identifier"] == nil else { continue }
+            // AirPods publish one power source per part ("Case", and "Combined" holding Left and
+            // Right). Name them like the BLE path ("… (Case)" / "… 🄻" / "… 🅁") so the same rows
+            // are updated rather than duplicated.
+            if let part = info["Part Identifier"] as? String {
+                if (info["Vendor ID"] as? Int) == 76 { updateAirPods(info, part: part, now: now) }
+                continue
+            }
             guard let name = info[kIOPSNameKey] as? String, !name.isEmpty,
                   let category = info["Accessory Category"] as? String,
                   let type = MagicBattery.accessoryCategoryTypes[category],
@@ -432,6 +435,43 @@ class MagicBattery {
         }
     }
 
+    /// AirPods levels from the accessory power sources. macOS keeps these (shared from the
+    /// paired iPhone) while the AirPods are in their case and not connected to this Mac, when
+    /// the BLE path hears nothing from them and `getAirpods()` is not called.
+    private func updateAirPods(_ info: [String: Any], part: String, now: Double) {
+        guard (info["Is Present"] as? Bool) != false,
+              let name = info[kIOPSNameKey] as? String, !name.isEmpty else { return }
+        let model = getHeadphoneModel(String(format: "%04x", info["Product ID"] as? Int ?? 0x200e))
+        let id = info["Accessory Identifier"] as? String ?? name
+        func reading(_ d: [String: Any]) -> (level: Int, charging: Int)? {
+            guard let level = d[kIOPSCurrentCapacityKey] as? Int else { return nil }
+            return (min(level, 100), (d[kIOPSIsChargingKey] as? Bool ?? false) ? 1 : 0)
+        }
+        switch part {
+        case "Case":
+            let base = name.hasSuffix(" Case") ? String(name.dropLast(5)) : name
+            guard let c = reading(info) else { return }
+            AirBatteryModel.updateDevice(Device(deviceID: id, deviceType: "ap_case", deviceName: base + " (Case)".local, deviceModel: model, batteryLevel: c.level, isCharging: c.charging, lastUpdate: now))
+        case "Combined":
+            let parts = info["Combined Parts"] as? [[String: Any]] ?? []
+            let left = parts.first { $0["Part Identifier"] as? String == "Left" }.flatMap(reading)
+            let right = parts.first { $0["Part Identifier"] as? String == "Right" }.flatMap(reading)
+            let parent = name + " (Case)".local
+            let twsMerge = ud.object(forKey: "twsMerge") as? Int ?? 5
+            if let l = left, let r = right, abs(l.level - r.level) < twsMerge, l.charging == r.charging {
+                AirBatteryModel.hideDevice(name + " 🄻")
+                AirBatteryModel.hideDevice(name + " 🅁")
+                AirBatteryModel.updateDevice(Device(deviceID: id + "_All", deviceType: "ap_pod_all", deviceName: name + " 🄻🅁", deviceModel: model, batteryLevel: min(l.level, r.level), isCharging: l.charging, isHidden: false, parentName: parent, lastUpdate: now))
+            } else {
+                AirBatteryModel.hideDevice(name + " 🄻🅁")
+                if let l = left { AirBatteryModel.updateDevice(Device(deviceID: id + "_Left", deviceType: "ap_pod_left", deviceName: name + " 🄻", deviceModel: model, batteryLevel: l.level, isCharging: l.charging, isHidden: false, parentName: parent, lastUpdate: now)) }
+                if let r = right { AirBatteryModel.updateDevice(Device(deviceID: id + "_Right", deviceType: "ap_pod_right", deviceName: name + " 🅁", deviceModel: model, batteryLevel: r.level, isCharging: r.charging, isHidden: false, parentName: parent, lastUpdate: now)) }
+            }
+        default:
+            break
+        }
+    }
+    
     func getOtherBTBattery() {
         //guard let result = process(path: "/usr/sbin/system_profiler", arguments: ["SPBluetoothDataType", "-json"]) else { return }
         if let json = try? JSONSerialization.jsonObject(with: Data(SPBluetoothDataModel.shared.data.utf8), options: []) as? [String: Any],

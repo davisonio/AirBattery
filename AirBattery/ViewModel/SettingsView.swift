@@ -187,7 +187,7 @@ struct NearbilityView: View {
                     }
                 }
                 Divider().opacity(0.5)
-                SSteper("Earbud Merging Threshold", value: $twsMerge, min: 1, max: 99, tips: "If the difference in battery usage between the left and right earbuds is less than this value, AirBattery will show them as one device.")
+                SSteper("Earbud Merging Threshold", value: $twsMerge, min: 0, max: 99, tips: "If the difference in battery level between the left and right earbuds is less than this value, AirBattery shows them as one device. Set it to 0 to always show them separately.")
             }
         }
         .sheet(isPresented: $showIOSBluetoothDevices) {

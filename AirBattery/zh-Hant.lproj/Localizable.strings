@@ -88,7 +88,7 @@
 "Try to get the battery usage of any Bluetooth device that AirBattery can find\n\nWARNING: This is a BETA feature and may cause unexpected errors!" = "嘗試掃描周邊所有的 BLE 裝置, 即使它可能不屬於您\n\n請注意: 這是一項測試版功能, 可能會導致未知的錯誤!";
 "Show or hide this Mac's built-in battery in the Dock icon" = "在 Dock 圖示中顯示此 Mac 的內建電池, 或將其從 Dock 圖示上隱藏";
 "Cycle through all found devices in the Dock icon" = "在 Dock 圖示中迴圈顯示所有已發現的裝置";
-"If the difference in battery usage between the left and right earbuds is less than this value, AirBattery will show them as one device." = "若一副立體聲耳機的左右兩側的電量差距小於此值, AirBattery 會將它們合併顯示為一個裝置.";
+"If the difference in battery level between the left and right earbuds is less than this value, AirBattery shows them as one device. Set it to 0 to always show them separately." = "若一副立體聲耳機的左右兩側的電量差距小於此值, AirBattery 會將它們合併顯示為一個裝置.設為 0 則始終分開顯示。";
 "System Default" = "跟隨系統預設";
 "System Default: Determined by macOS\n\nNearbility: Same as Nearbility setting" = "跟隨系統預設: 由 macOS 決定小工具何時更新\n\nNearbility: 與 Nearbility 更新頻率保持一致";
 "AirBattery battery usage widget" = "AirBattery 電量小工具";
