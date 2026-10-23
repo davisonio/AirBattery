@@ -65,6 +65,7 @@ Personal fork of [lihaoyun6/AirBattery](https://github.com/lihaoyun6/AirBattery)
 | --- | --- |
 | `e132760` | Last-update time on hover reads "now", "1 min ago", "2 hr ago" instead of "0 mins ago", and is no longer cut off by the hover buttons |
 | `e132760` | Widget settings: "Show This Mac" toggle to leave the Mac's own battery off widgets (upstream had this commented out) |
+| `aad0135` | English fixes in settings, widget picker and alerts ("More ways to displays", "will be showed", "VisionPro" and others) |
 
 ### Security fixes (from this fork's audit, `430d19e`)
 
