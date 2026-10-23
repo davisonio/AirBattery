@@ -59,6 +59,13 @@ Personal fork of [lihaoyun6/AirBattery](https://github.com/lihaoyun6/AirBattery)
 | `8990d10` | Pinned menu bar icons stay current and keep their position across launches | #182 | MsieurPafi, from callieskye |
 | `8e02c56` | Settings window comes to the front when you click the gear (it opened behind other apps on macOS 14+); grammar of the Bluetooth tip | #175 | this fork |
 
+### Changes Craig asked for
+
+| Commit | Change |
+| --- | --- |
+| `e132760` | Last-update time on hover reads "now", "1 min ago", "2 hr ago" instead of "0 mins ago", and is no longer cut off by the hover buttons |
+| `e132760` | Widget settings: "Show This Mac" toggle to leave the Mac's own battery off widgets (upstream had this commented out) |
+
 ### Security fixes (from this fork's audit, `430d19e`)
 
 - Nearcast: the unencrypted `sender` field of an incoming message was used as a file name, so anyone on the same network could write a `.json` file to any path the user can write to. The sender must now be a plain ID (`[A-Za-z0-9-]`, at most 64 characters).
