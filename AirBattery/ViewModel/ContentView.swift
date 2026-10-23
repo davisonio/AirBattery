@@ -494,11 +494,11 @@ struct popover: View {
                                                         .foregroundColor(.secondary)
                                                 } else {
                                                     if allDevices[index].realUpdate != 0.0 {
-                                                        Text("\(Int((Date().timeIntervalSince1970 - allDevices[index].realUpdate) / 60))"+" mins ago".local)
+                                                        Text(timeAgo(allDevices[index].realUpdate)).lineLimit(1).fixedSize()
                                                             .font(.system(size: 11, weight: .medium))
                                                             .foregroundColor(.secondary)
                                                     } else {
-                                                        Text("\(Int((Date().timeIntervalSince1970 - allDevices[index].lastUpdate) / 60))"+" mins ago".local)
+                                                        Text(timeAgo(allDevices[index].lastUpdate)).lineLimit(1).fixedSize()
                                                             .font(.system(size: 11, weight: .medium))
                                                             .foregroundColor(.secondary)
                                                     }
@@ -854,7 +854,7 @@ struct nearcastView: View {
                         if overStackNC == mainIndex && overStack == index {
                             Spacer()
                             HStack(spacing: 3) {
-                                Text("\(Int((Date().timeIntervalSince1970 - devices[index].lastUpdate) / 60))"+" mins ago".local)
+                                Text(timeAgo(devices[index].lastUpdate)).lineLimit(1).fixedSize()
                                     .font(.system(size: 11))
                                 if devices[index].hasBattery {
                                     Spacer().frame(width: 1)
@@ -977,6 +977,15 @@ struct nearcastView: View {
         .offset(y: 2.5)
     }
 
+}
+
+/// "now", "5 min. ago", "2 hr. ago", localised by the system.
+func timeAgo(_ time: Double) -> String {
+    let seconds = Date().timeIntervalSince1970 - time
+    if seconds < 60 { return "now".local }
+    let formatter = RelativeDateTimeFormatter()
+    formatter.unitsStyle = .short
+    return formatter.localizedString(fromTimeInterval: -seconds)
 }
 
 func openAboutPanel() {

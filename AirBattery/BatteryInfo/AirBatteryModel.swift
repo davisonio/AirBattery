@@ -157,14 +157,15 @@ class AirBatteryModel {
     }
     
     static func writeData(){
-        //let showMac = ud.object(forKey: "showMacOnWidget") as? Bool ?? true
+        let showMac = ud.object(forKey: "showMacOnWidget") as? Bool ?? true
         let revList = ud.object(forKey: "revListOnWidget") as? Bool ?? false
         
         var devices = getAll(reverse: revList)
         let ibStatus = InternalBattery.status
         if ibStatus.hasBattery { devices.insert(ib2ab(ibStatus), at: 0) }
+        let widgetDevices = showMac ? devices : devices.filter { $0.deviceID != "@MacInternalBattery" }
         do {
-            let jsonData = try JSONEncoder().encode(devices)
+            let jsonData = try JSONEncoder().encode(widgetDevices)
             try jsonData.write(to: getJsonURL(), options: .atomic)
         } catch {
             print("Write JSON error：\(error)")

@@ -53,6 +53,7 @@
 "Dynamic Battery Icon" = "動態電池圖示";
 "Show Percentage" = "顯示百分比";
 "Hide percentage when above" = "高於此電量自動隱藏百分比";
+"Show This Mac" = "顯示本機";
 "Reverse Device List" = "顛倒裝置列表順序";
 "Widget" = "小工具";
 "No Device Found!" = "未發現任何裝置!";
@@ -185,3 +186,4 @@
 "Connecting…" = "正在連線…";
 "Nearby Apple devices may include Macs and Apple Watches. Select only your iPhone or iPad. Open Personal Hotspot and move it close to the Mac before connecting." = "附近裝置可能包含 Mac 和 Apple Watch，請僅選擇自己的 iPhone 或 iPad。連線前請開啟「個人熱點」頁面並靠近 Mac。";
 "Bluetooth connection failed" = "藍牙連線失敗";
+"now" = "剛剛";

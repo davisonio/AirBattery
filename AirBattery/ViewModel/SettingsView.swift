@@ -456,7 +456,7 @@ struct DisplayView: View {
 }
 
 struct WidgetView: View {
-    //@AppStorage("showMacOnWidget") var showMacOnWidget = true
+    @AppStorage("showMacOnWidget") var showMacOnWidget = true
     @AppStorage("revListOnWidget") var revListOnWidget = false
     @AppStorage("deviceOnWidget") var deviceOnWidget = ""
     @AppStorage("widgetInterval") var widgetInterval = 0
@@ -468,6 +468,12 @@ struct WidgetView: View {
     var body: some View {
         SForm {
             SGroupBox(label: "Widget") {
+                SToggle("Show This Mac", isOn: $showMacOnWidget)
+                    .onChange(of: showMacOnWidget) { _ in
+                        AirBatteryModel.writeData()
+                        WidgetCenter.shared.reloadAllTimelines()
+                    }
+                Divider().opacity(0.5)
                 SToggle("Reverse Device List", isOn: $revListOnWidget)
                 Divider().opacity(0.5)
                 SPicker("Refresh Interval", selection: $widgetInterval) {

@@ -53,6 +53,7 @@
 "Dynamic Battery Icon" = "动态电池图标";
 "Show Percentage" = "显示百分比";
 "Hide percentage when above" = "高于此电量自动隐藏百分比";
+"Show This Mac" = "显示本机";
 "Reverse Device List" = "颠倒设备列表顺序";
 "Widget" = "小组件";
 "No Device Found!" = "未发现任何设备!";
@@ -185,3 +186,4 @@
 "Connecting…" = "正在连接…";
 "Nearby Apple devices may include Macs and Apple Watches. Select only your iPhone or iPad. Open Personal Hotspot and move it close to the Mac before connecting." = "附近设备可能包含 Mac 和 Apple Watch，请仅选择自己的 iPhone 或 iPad。连接前请打开“个人热点”页面并靠近 Mac。";
 "Bluetooth connection failed" = "蓝牙连接失败";
+"now" = "刚刚";
