@@ -988,7 +988,18 @@ func openSettingPanel() {
     dockWindow.orderOut(nil)
     NSApp.activate(ignoringOtherApps: true)
     if #available(macOS 14, *) {
-        NSApp.mainMenu?.items.first?.submenu?.item(at: 2)?.performAction()
+        // activate(ignoringOtherApps:) does nothing on macOS 14+, so the window opened behind
+        // other apps and the gear button looked dead. Find "Settings…" by its ⌘, shortcut and
+        // bring its window to the front explicitly.
+        NSApp.activate()
+        let appMenu = NSApp.mainMenu?.items.first?.submenu
+        (appMenu?.items.first { $0.keyEquivalent == "," } ?? appMenu?.item(at: 2))?.performAction()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            let settings = NSApp.windows.first { $0.identifier?.rawValue == "com_apple_SwiftUI_Settings_window" }
+                ?? NSApp.windows.first { $0.title.hasSuffix("Settings") }
+            settings?.makeKeyAndOrderFront(nil)
+            settings?.orderFrontRegardless()
+        }
     }else if #available(macOS 13, *) {
         NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
     } else {

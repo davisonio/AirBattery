@@ -144,7 +144,7 @@
 "Same as Nearbility" = "與 Nearbility 同步";
 "Reload" = "過載";
 "If you see a bluetooth pairing request from any device that isn't yours, add it to your blocklist!" = "如果您看到任何來自不屬於您的裝置的藍芽配對請求, 將其加入遮蔽列表就能讓它消失.";
-"If some of your devices shows battery level in the Bluetooth menu, but AirBattery doesn't find it. Try disconnecting and reconnecting it, and wait a few minutes." = "如果某些裝置在系統藍芽選單中有電量顯示\n但是在 AirBattery 中沒有顯示出來的話\n請嘗試斷開然後重新連線它們並等待幾分鐘";
+"If some of your devices show a battery level in the Bluetooth menu but AirBattery doesn't find them, try disconnecting and reconnecting them, then wait a few minutes." = "如果某些裝置在系統藍芽選單中有電量顯示\n但是在 AirBattery 中沒有顯示出來的話\n請嘗試斷開然後重新連線它們並等待幾分鐘";
 "AirBattery Tips" = "AirBattery Tips";
 "Don't remind me again" = "不再提醒";
 "Allowlist Mode" = "白名單模式";

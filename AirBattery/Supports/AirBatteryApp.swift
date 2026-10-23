@@ -300,7 +300,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotifi
             let tipID = "ab.third-party-device.note"
             let never = ud.object(forKey: "neverRemindMe") as! [String]
             if !never.contains(tipID) {
-                let alert = createAlert(title: "AirBattery Tips".local, message: "If some of your devices shows battery level in the Bluetooth menu, but AirBattery doesn't find it. Try disconnecting and reconnecting it, and wait a few minutes.".local, button1: "Don't remind me again", button2: "OK")
+                let alert = createAlert(title: "AirBattery Tips".local, message: "If some of your devices show a battery level in the Bluetooth menu but AirBattery doesn't find them, try disconnecting and reconnecting them, then wait a few minutes.".local, button1: "Don't remind me again", button2: "OK")
                 if alert.runModal() == .alertFirstButtonReturn { ud.setValue(never + [tipID], forKey: "neverRemindMe") }
             }
             // Bootstrap Enhanced HID scan incrementally with a short initial window
