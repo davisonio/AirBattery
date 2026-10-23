@@ -1,4 +1,6 @@
 # 
+> Personal fork with bug fixes from other forks and PRs, Sparkle removed and libimobiledevice rebuilt from source. See [FORK.md](FORK.md). Upstream: [lihaoyun6/AirBattery](https://github.com/lihaoyun6/AirBattery).
+
 <p align="center">
 <img src="./AirBattery/Assets.xcassets/AppIcon.appiconset/icon_128x128@2x.png" width="200" height="200" />
 <h1 align="center">AirBattery</h1>
