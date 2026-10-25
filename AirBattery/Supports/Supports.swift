@@ -380,6 +380,15 @@ func ib2ab(_ ib: iBattery) -> Device {
     return Device(hasBattery: ib.hasBattery, deviceID: "@MacInternalBattery", deviceType: machineType, deviceName: deviceName, deviceModel: macID, batteryLevel: ib.batteryLevel, isCharging: ib.isCharging ? 1 : 0, isCharged: ib.isCharged, acPowered: ib.acPowered, lowPower: ib.lowPower, lastUpdate: Double(Date().timeIntervalSince1970))
 }
 
+// Devices listed in the popover: this Mac's built-in battery first (unless hidden), then the rest.
+func popoverDevices() -> [Device] {
+    @AppStorage("macInPopover") var macInPopover = true
+    var allDevices = AirBatteryModel.getAll()
+    let ibStatus = InternalBattery.status
+    if ibStatus.hasBattery && macInPopover { allDevices.insert(ib2ab(ibStatus), at: 0) }
+    return allDevices
+}
+
 func sliceList(data: [Device], length: Int, count: Int) -> [Device] {
     let totalLength = length * count
     if totalLength <= data.count { return Array(data[totalLength-length..<totalLength]) }

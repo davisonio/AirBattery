@@ -106,9 +106,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotifi
         if dockWindow.isVisible {
             dockWindow.orderOut(nil)
         } else {
-            var allDevices = AirBatteryModel.getAll()
-            let ibStatus = InternalBattery.status
-            if ibStatus.hasBattery { allDevices.insert(ib2ab(ibStatus), at: 0) }
+            let allDevices = popoverDevices()
             let contentViewSwiftUI = popover(fromDock: true, allDevice: allDevices)
             let contentView = NSHostingView(rootView: contentViewSwiftUI)
             let hiddenRow = AirBatteryModel.getBlackList().count > 0 ? 1 : 0
@@ -373,9 +371,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotifi
     
     /*func menuWillOpen(_ menu: NSMenu) {
         dockWindow.orderOut(nil)
-        var allDevices = AirBatteryModel.getAll()
-        let ibStatus = InternalBattery.status
-        if ibStatus.hasBattery { allDevices.insert(ib2ab(ibStatus), at: 0) }
+        let allDevices = popoverDevices()
         let contentViewSwiftUI = popover(fromDock: false, allDevice: allDevices)
         let contentView = NSHostingView(rootView: contentViewSwiftUI)
         let hiddenRow = AirBatteryModel.getBlackList().count > 0 ? 1 : 0
@@ -398,9 +394,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, UNUserNotifi
     
     @objc func togglePopover(_ sender: Any?) {
         if let button = statusBarItem.button, !menuPopover.isShown {
-            var allDevices = AirBatteryModel.getAll()
-            let ibStatus = InternalBattery.status
-            if ibStatus.hasBattery { allDevices.insert(ib2ab(ibStatus), at: 0) }
+            let allDevices = popoverDevices()
             let contentView = NSHostingController(rootView: popover(fromDock: false, allDevice: allDevices))
             menuPopover.setValue(true, forKeyPath: "shouldHideAnchor")
             menuPopover.contentViewController = contentView

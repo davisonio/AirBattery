@@ -112,7 +112,9 @@ class AirBatteryModel {
         for d in list {
             if d.parentName == "" && d.parentName != thisMac {
                 newList.append(d)
-                for sd in list.filter({ $0.parentName == d.deviceName }) {
+                // Left AirPod before right, whichever reported first
+                let subDevices = list.filter({ $0.parentName == d.deviceName })
+                for sd in subDevices.filter({ $0.deviceType == "ap_pod_left" }) + subDevices.filter({ $0.deviceType != "ap_pod_left" }) {
                     newList.append(sd)
                 }
             }

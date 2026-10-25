@@ -387,9 +387,7 @@ struct popover: View {
                                 dockWindow.orderOut(nil)
                             } else {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                    allDevices = AirBatteryModel.getAll()
-                                    let ibStatus = InternalBattery.status
-                                    if ibStatus.hasBattery { allDevices.insert(ib2ab(ibStatus), at: 0) }
+                                    allDevices = popoverDevices()
                                     allNearcast = getFiles(withExtension: "json", in: ncFolder)
                                 }
                             }
@@ -798,12 +796,10 @@ struct popover: View {
         .onAppear { allDevices = allDevice }
         .onReceive(mainTimer) { t in
             if !fromDock && menuPopover.isShown {
-                allDevices = AirBatteryModel.getAll()
+                allDevices = popoverDevices()
                 hiddenDevices = AirBatteryModel.getBlackList()
                 hidden = [Int]()
                 hidden2 = [Int]()
-                let ibStatus = InternalBattery.status
-                if ibStatus.hasBattery { allDevices.insert(ib2ab(ibStatus), at: 0) }
                 if nearCast { allNearcast = getFiles(withExtension: "json", in: ncFolder) }
             }
         }

@@ -395,6 +395,7 @@ struct DisplayView: View {
     @AppStorage("colorfulBattery") var colorfulBattery = false
     @AppStorage("iosBatteryStyle") var iosBatteryStyle = false
     @AppStorage("intBattOnStatusBar") var intBattOnStatusBar = true
+    @AppStorage("macInPopover") var macInPopover = true
     @AppStorage("batteryPercent") var batteryPercent = "outside"
     @AppStorage("hideLevel") var hideLevel = 90
     @AppStorage("disappearTime") var disappearTime = 20
@@ -435,6 +436,8 @@ struct DisplayView: View {
                         Text("\(hideLevel)%").tag(hideLevel)
                     }
                 }.disabled(!intBattOnStatusBar || (batteryPercent == "hide"))
+                Divider().opacity(0.5)
+                SToggle("Show This Mac in List", isOn: $macInPopover, tips: "Show this Mac's built-in battery in the menu bar device list")
             }
             SGroupBox(label: "Dock") {
                     SPicker("Appearance", selection: $appearance) {
