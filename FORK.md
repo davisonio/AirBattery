@@ -68,6 +68,8 @@ Personal fork of [lihaoyun6/AirBattery](https://github.com/lihaoyun6/AirBattery)
 | `aad0135` | English fixes in settings, widget picker and alerts ("More ways to displays", "will be showed", "VisionPro" and others) |
 | `f8e1b6b` | AirPods show while in their case, from the levels macOS shares from the iPhone (the system Batteries widget's source); before, they only appeared with the lid open or in your ears |
 | `f8e1b6b` | Earbud Merging Threshold can be set to 0 to always show left and right separately |
+| `dd1a148` | Left AirPod always listed before the right (it followed whichever reported first) |
+| `dd1a148` | Menu Bar settings: "Show This Mac in List" toggle to leave the Mac's own battery out of the popover (upstream always shows it; the Dock's "Built-in Battery Style" didn't apply there) |
 
 ### Security fixes (from this fork's audit, `430d19e`)
 
