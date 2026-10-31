@@ -16,3 +16,5 @@ ditto build/dd/Build/Products/Release/AirBattery.app /Applications/AirBattery.ap
 ```
 
 `/Applications/AirBattery.app/Contents/Resources/abt` prints what the app currently sees, but not each device's type, model or ID (the type picks the icon). Those are in `~/Library/Containers/io.davison.AirBattery.widget/Data/Documents/data.json`. A CoreBluetooth UUID as `deviceID` means the device came in over BLE (`BLEBattery.swift`); the iPhone arrives that way through its Continuity link even with "iPhone / iPad over Bluetooth" off.
+
+iPhone charging state: only the Wi-Fi/USB read (`ideviceinfo -q com.apple.mobile.battery`) has it. Over Bluetooth there is none (checked 31 Oct 2026: the phone's GATT Battery Service has only 0x2A19; Continuity adverts carry no charging bit), so `BLEBattery` infers it from the level trend. Debug logging from the app: `NSLog` text is redacted as `<private>`, so append to a file instead; use `/usr/bin/log`, since zsh's `log` builtin shadows it.
