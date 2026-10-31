@@ -15,4 +15,4 @@ osascript -e 'quit app "AirBattery"'; rm -rf /Applications/AirBattery.app
 ditto build/dd/Build/Products/Release/AirBattery.app /Applications/AirBattery.app && open /Applications/AirBattery.app
 ```
 
-`/Applications/AirBattery.app/Contents/Resources/abt` prints what the app currently sees.
+`/Applications/AirBattery.app/Contents/Resources/abt` prints what the app currently sees, but not each device's type, model or ID (the type picks the icon). Those are in `~/Library/Containers/io.davison.AirBattery.widget/Data/Documents/data.json`. A CoreBluetooth UUID as `deviceID` means the device came in over BLE (`BLEBattery.swift`); the iPhone arrives that way through its Continuity link even with "iPhone / iPad over Bluetooth" off.
