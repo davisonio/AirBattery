@@ -192,7 +192,6 @@ class BLEBattery: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
 
     var peripherals: [CBPeripheral?] = []
     var otherAppleDevices: Set<UUID> = []
-    var bleDevicesLevel: [String:UInt8] = [:]
     var bleDevicesVendor: [String:String] = [:]
     var bleDevicesModel: [String:String] = [:]
     var scanTimer: Timer?
@@ -278,8 +277,10 @@ class BLEBattery: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
             guard let name = peripheral.name, !AirBatteryModel.checkIfBlocked(name: name) else { continue }
             if isIOSConnection(identifier) || otherAppleDevices.contains(identifier) { continue }
             if let device = AirBatteryModel.getByName(name) {
-                // Another source (IOKit, system_profiler, logs) already reports this device.
-                if device.deviceID != identifier.uuidString { continue }
+                // Another source (IOKit, system_profiler, logs, an iPhone over Wi-Fi) already
+                // reports this device. Take over once it has stopped: an iPhone that dropped off
+                // Wi-Fi kept its last Wi-Fi level and charging state until the row expired (20 min).
+                if device.deviceID != identifier.uuidString && now - device.lastUpdate < Double(3 * 60 * updateInterval) { continue }
                 if now - device.lastUpdate < refreshAge { continue }
             }
             retainPeripheral(peripheral)
@@ -519,13 +520,16 @@ class BLEBattery: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
                 }
                 if isIOSConnection { iosBatteryReadSucceeded.insert(identifier) }
                 batteryPeripherals.insert(identifier)
-                var charging = 0
-                //if let lastLevel = bleDevicesLevel[deviceName], cStatusOfBLE {
-                if let lastLevel = bleDevicesLevel[deviceName] {
+                // GATT has no charging state (an iPhone's Battery Service holds only the level), so
+                // it is inferred from the level against the device's last reading from any source.
+                // While the level holds, the last state stays (from a rise, or from Wi-Fi). It used
+                // to reset to "not charging" on every read without a rise, so a charging iPhone
+                // flickered between the two.
+                var charging = -1
+                if let lastLevel = AirBatteryModel.getByName(deviceName)?.batteryLevel {
                     if level > lastLevel { charging = 1 }
-                    //if level < lastLevel { charging = 0 }
+                    if level < lastLevel { charging = 0 }
                 }
-                bleDevicesLevel[deviceName] = data[0]
                 if var device = AirBatteryModel.getByName(deviceName) {
                     device.deviceID = peripheral.identifier.uuidString
                     device.batteryLevel = level
@@ -534,7 +538,7 @@ class BLEBattery: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
                     _ = applyAppleModel(&device)
                     AirBatteryModel.updateDevice(device)
                 } else {
-                    var device = Device(deviceID: peripheral.identifier.uuidString, deviceType: getType(deviceName), deviceName: deviceName, batteryLevel: level, isCharging: charging, lastUpdate: now)
+                    var device = Device(deviceID: peripheral.identifier.uuidString, deviceType: getType(deviceName), deviceName: deviceName, batteryLevel: level, isCharging: max(charging, 0), lastUpdate: now)
                     _ = applyAppleModel(&device)
                     AirBatteryModel.updateDevice(device)
                 }
