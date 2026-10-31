@@ -194,6 +194,7 @@ class BLEBattery: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     var otherAppleDevices: Set<UUID> = []
     var bleDevicesLevel: [String:UInt8] = [:]
     var bleDevicesVendor: [String:String] = [:]
+    var bleDevicesModel: [String:String] = [:]
     var scanTimer: Timer?
     private var discoveredIOSPeripherals: [UUID: CBPeripheral] = [:]
     /// Generic BLE peripherals ("Discover more BLE devices") that turned out to have no
@@ -530,9 +531,11 @@ class BLEBattery: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
                     device.batteryLevel = level
                     device.lastUpdate = now
                     if charging != -1 { device.isCharging = charging }
+                    _ = applyAppleModel(&device)
                     AirBatteryModel.updateDevice(device)
                 } else {
-                    let device = Device(deviceID: peripheral.identifier.uuidString, deviceType: getType(deviceName), deviceName: deviceName, batteryLevel: level, isCharging: charging, lastUpdate: now)
+                    var device = Device(deviceID: peripheral.identifier.uuidString, deviceType: getType(deviceName), deviceName: deviceName, batteryLevel: level, isCharging: charging, lastUpdate: now)
+                    _ = applyAppleModel(&device)
                     AirBatteryModel.updateDevice(device)
                 }
             }
@@ -547,15 +550,11 @@ class BLEBattery: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
                 centralManager.cancelPeripheralConnection(peripheral)
                 return
             }
-            if let data = characteristic.value, let model = data.ascii(), let deviceName = peripheral.name, let vendor = bleDevicesVendor[deviceName] {
-                if vendor == "Apple Inc." && model.contains("Watch") { otherAppleDevices.insert(identifier) }
-                if var device = AirBatteryModel.getByName(deviceName), device.deviceModel != model{
-                    if vendor == "Apple Inc." {
-                        device.deviceType = model.replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "\\d", with: "", options: .regularExpression, range: nil)
-                        device.deviceModel = model
-                    } else {
-                        device.deviceType = getType(deviceName)
-                    }
+            if let data = characteristic.value, let model = data.ascii(), let deviceName = peripheral.name {
+                bleDevicesModel[deviceName] = model
+                if appleModel(deviceName)?.contains("Watch") == true { otherAppleDevices.insert(identifier) }
+                if var device = AirBatteryModel.getByName(deviceName), device.deviceModel != model {
+                    if !applyAppleModel(&device) { device.deviceType = getType(deviceName) }
                     device.lastUpdate = Date().timeIntervalSince1970
                     AirBatteryModel.updateDevice(device)
                 }
@@ -705,6 +704,26 @@ class BLEBattery: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         return 255
     }
     
+    /// The GATT Model Number of an Apple device ("iPhone17,1"), once read. Its vendor string
+    /// can arrive after it or not at all, so the identifier format also counts as Apple.
+    private func appleModel(_ name: String) -> String? {
+        guard let model = bleDevicesModel[name] else { return nil }
+        if bleDevicesVendor[name] == "Apple Inc." { return model }
+        return model.range(of: "^(iPhone|iPad|iPod|Watch)\\d+,\\d+$", options: .regularExpression) != nil ? model : nil
+    }
+
+    /// Sets an Apple device's type and model from its GATT Model Number. Level, model and
+    /// vendor come from two services in no fixed order, and the model used to be dropped
+    /// unless the device and its vendor were already known. An iPhone that macOS keeps
+    /// connected then stayed generic Bluetooth (wrong icon) for good, since later refreshes
+    /// only re-read its level. So this also runs on every level read.
+    private func applyAppleModel(_ device: inout Device) -> Bool {
+        guard let model = appleModel(device.deviceName), device.deviceModel != model else { return false }
+        device.deviceType = model.replacingOccurrences(of: ",", with: "").replacingOccurrences(of: "\\d", with: "", options: .regularExpression, range: nil)
+        device.deviceModel = model
+        return true
+    }
+
     func getType(_ name: String) -> String{
         //guard let result = process(path: "/usr/sbin/system_profiler", arguments: ["SPBluetoothDataType", "-json"]) else { return "general_bt" }
         if let json = try? JSONSerialization.jsonObject(with: Data(SPBluetoothDataModel.shared.data.utf8), options: []) as? [String: Any],
